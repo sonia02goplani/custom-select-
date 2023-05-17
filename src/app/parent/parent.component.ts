@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-parent',
@@ -10,7 +11,7 @@ export class ParentComponent implements OnInit {
   data = Array.from({ length: this.total }).map((_, i) =>
     Object.assign({ id: i, name: `Option ${i}` })
   );
-
+  userName = new FormControl();
   constructor() {}
 
   ngOnInit() {

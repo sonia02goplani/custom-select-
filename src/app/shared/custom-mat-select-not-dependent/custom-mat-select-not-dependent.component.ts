@@ -32,7 +32,7 @@ export class CustomMatSelectNotDependentComponent
     this._data = value?.slice();
     this.originalData = this._data?.slice();
     this.offset = 0;
-    this.items.next([]);
+    this.items.next(null);
     this.getNextBatch();
   }
   get data() {
@@ -63,7 +63,7 @@ export class CustomMatSelectNotDependentComponent
   onTouched: any;
   disabled = false;
   value: any;
-  items = new BehaviorSubject<any[]>([]);
+  items = new BehaviorSubject<any[] | null>(null);
   items$: Observable<any[]> | undefined;
   selectedItemControl: FormControl = new FormControl();
   searchFilterControl: FormControl = new FormControl(null);
@@ -76,7 +76,7 @@ export class CustomMatSelectNotDependentComponent
   constructor(public ngControl: NgControl) {
     if (this.ngControl != null) this.ngControl.valueAccessor = this;
     this.items$ = this.items.asObservable().pipe(
-      scan((acc: any[], curr: any[]) => {
+      scan((acc: any[] | null, curr: any[] | null) => {
         if (!acc || !curr) return [];
         return [...acc, ...curr];
       }, [])
@@ -133,22 +133,43 @@ export class CustomMatSelectNotDependentComponent
         this._data = this.originalData?.slice();
       }
       this.offset = 0;
-      this.items.next([]);
+      this.items.next(null);
       this.getNextBatch();
+      return;
+    } else {
+      search = search.toLowerCase();
     }
+    this._data = this._filterArray(search, this.originalData, this.valueName);
+    this.offset = 0;
+    this.items.next(null);
+    this.getNextBatch();
+  }
+
+  _filterArray(value: string, arrayToFilter: any[], filterproperty: string) {
+    const temp = arrayToFilter?.filter((item) =>
+      item[filterproperty].includes(value)
+    );
+    return temp;
   }
   setToggleAllCheckboxState() {
-    let filteredLength =0
-    if(this.selectedItemControl && this.selectedItemControl.value?.length > 0){
-      this._data.forEach(e1=>{
-        if(Object.keys(this.selectedData)?.map(Number).indexOf(e1[this.identifierName]) > -1){
+    let filteredLength = 0;
+    if (
+      this.selectedItemControl &&
+      this.selectedItemControl.value?.length > 0
+    ) {
+      this._data.forEach((e1) => {
+        if (
+          Object.keys(this.selectedData)
+            ?.map(Number)
+            .indexOf(e1[this.identifierName]) > -1
+        ) {
           filteredLength++;
         }
-
-      })
+      });
     }
-    this.isIndeterminate = filteredLength > 0 && filteredLength < this._data.length
-    this.isChecked = filteredLength > 0 && filteredLength == this._data?.length
+    this.isIndeterminate =
+      filteredLength > 0 && filteredLength < this._data.length;
+    this.isChecked = filteredLength > 0 && filteredLength == this._data?.length;
   }
   getNextBatch() {
     const result = this._data.slice(this.offset, this.offset + this.limit);
@@ -175,7 +196,7 @@ export class CustomMatSelectNotDependentComponent
         }
       );
       this.excludeIds = Object.keys(this.selectedData)?.map((r) => parseInt(r));
-      this.onChange(this.selectedItemControl.value);
+      this.onChange?.(this.selectedItemControl.value);
       this.setToggleAllCheckboxState();
     } else {
       this._data.map((item) => {
@@ -190,7 +211,7 @@ export class CustomMatSelectNotDependentComponent
         }
       );
       this.excludeIds = Object.keys(this.selectedData)?.map((r) => parseInt(r));
-      this.onChange(this.selectedItemControl.value);
+      this.onChange?.(this.selectedItemControl.value);
       this.setToggleAllCheckboxState();
     }
   }
@@ -233,7 +254,7 @@ export class CustomMatSelectNotDependentComponent
         emitEvent: false,
       }
     );
-    this.onChange(this.selectedItemControl.value);
+    this.onChange?.(this.selectedItemControl.value);
     if (this.multiple && this.enableSelectAll) this.setToggleAllCheckboxState();
   }
 }

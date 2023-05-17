@@ -7,7 +7,7 @@
     [formControl]="selectedItemControl"
     #matselect
     msInfiniteScroll
-    (infinitescroll)="getNextBatch()"
+    (infiniteScroll)="getNextBatch()"
     threshold="20%"
     [complete]="offset == data.length"
     debouncetime="100"
