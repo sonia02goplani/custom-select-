@@ -1,0 +1,50 @@
+<mat-form-field appearance="outline">
+  <mat-label> </mat-label>
+  <mat-select
+    (closed)="onCloseSelect()"
+    [disabled]="disabled"
+    [multiple]="multiple"
+    [formControl]="selectedItemControl"
+    #matselect
+    msInfiniteScroll
+    (infinitescroll)="getNextBatch()"
+    threshold="20%"
+    [complete]="offset == data.length"
+    debouncetime="100"
+  >
+    <mat-option>
+      <ngx-mat-select-search
+        [formControl]="searchFilterControl"
+        [disableScrollToActiveOnOptionsChanged]="true"
+        [showToggleAllCheckbox]="true"
+        [toggleAllCheckboxIndeterminate]="isIndeterminate"
+        [toggleAllCheckboxChecked]="isChecked"
+        (toggleAll)="toggleSelectAll($event)"
+        noEntriesFoundLabel="'no matching options found'"
+      >
+      </ngx-mat-select-search>
+    </mat-option>
+    <ng-container *ngFor="let item of items$ | async">
+      <!-- Single select -->
+      <mat-option
+        *ngIf="!multiple"
+        [value]="item[identifierName]"
+        (onSelectionChange)="UnCheckSingleSelect($event, item)"
+        [disabled]="disableOptions.includes(item[identifierName])"
+      >
+        {{ item[valueName] }}
+      </mat-option>
+
+      <!-- Multiple Select -->
+      <mat-option
+        *ngIf="multiple"
+        [value]="item[identifierName]"
+        (onSelectionChange)="UnCheckSelectAll($event, item)"
+      >
+        {{ item[valueName] }}
+      </mat-option>
+    </ng-container>
+  </mat-select>
+  <mat-hint></mat-hint>
+  <mat-error></mat-error>
+</mat-form-field>

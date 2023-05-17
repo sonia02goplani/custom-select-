@@ -1,0 +1,17 @@
+sjkdhkhash
+<mat-form-field appearance="outline">
+  <mat-label> new</mat-label>
+  <input matInput type="text" />
+</mat-form-field>
+<app-custom-mat-select-not-dependent
+  [data]="data"
+  [identifierName]="'id'"
+  [valueName]="'name'"
+  [multiple]="true"
+  [enableSelectAll]="true"
+  [editMode]="false"
+  formControlName="userName"
+  [isFieldRequired]="true"
+  [placeholder]="'User Name'"
+>
+</app-custom-mat-select-not-dependent>
