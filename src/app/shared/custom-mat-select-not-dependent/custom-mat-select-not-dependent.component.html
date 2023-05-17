@@ -1,5 +1,5 @@
 <mat-form-field appearance="outline">
-  <mat-label> </mat-label>
+  <mat-label>{{ placeholder }} </mat-label>
   <mat-select
     (closed)="onCloseSelect()"
     [disabled]="disabled"
@@ -14,6 +14,7 @@
   >
     <mat-option>
       <ngx-mat-select-search
+        placeholderLabel="search"
         [formControl]="searchFilterControl"
         [disableScrollToActiveOnOptionsChanged]="true"
         [showToggleAllCheckbox]="true"

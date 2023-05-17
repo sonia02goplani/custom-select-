@@ -7,14 +7,17 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./parent.component.css'],
 })
 export class ParentComponent implements OnInit {
-  total = 4000;
-  data = Array.from({ length: this.total }).map((_, i) =>
-    Object.assign({ id: i, name: `Option ${i}` })
+  usertotal = 4000;
+  userData = Array.from({ length: this.usertotal }).map((_, i) =>
+    Object.assign({ id: i, name: `User ${i}` })
+  );
+  genderData = Array.from({ length: 3 }).map((_, i) =>
+    Object.assign({ id: i, name: `Gender ${i}` })
   );
   userName = new FormControl();
+  gender = new FormControl();
+
   constructor() {}
 
-  ngOnInit() {
-    console.log(this.data);
-  }
+  ngOnInit() {}
 }
